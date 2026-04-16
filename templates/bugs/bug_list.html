@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+{% block title %}Bug List{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">All Bugs</div>
+        <div class="breadcrumb"><span>Dashboard</span> / Bugs</div>
+    </div>
+    {% if user.role == 'admin' or user.role == 'manager' or user.role == 'tester' %}
+    <a href="{% url 'bug_create' %}" class="btn btn-danger">+ Report Bug</a>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Bug List</div>
+        <div style="font-size:0.85rem; color:#888;">{{ bugs|length }} bug(s)</div>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>#</th><th>Bug ID</th><th>Project</th><th>Task</th><th>Description</th><th>Reported By</th><th>Assigned To</th><th>Status</th><th>Reported Date</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for bug in bugs %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>#{{ bug.id }}</strong></td>
+                    <td>{{ bug.task.module.project.name }}</td>
+                    <td>{{ bug.task.title }}</td>
+                    <td>{{ bug.description|truncatechars:45 }}</td>
+                    <td>{{ bug.reported_by.get_full_name }}</td>
+                    <td>{{ bug.assigned_to.get_full_name|default:"Unassigned" }}</td>
+                    <td>
+                        {% if bug.status == 'Pending' %}<span class="badge badge-pending">Pending</span>
+                        {% elif bug.status == 'In Progress' %}<span class="badge badge-inprogress">In Progress</span>
+                        {% elif bug.status == 'Completed' %}<span class="badge badge-completed">Completed</span>
+                        {% elif bug.status == 'Rejected' %}<span class="badge badge-rejected">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ bug.reported_date|date:"d M Y" }}</td>
+                    <td>
+                        <div class="action-btns">
+                            <a href="{% url 'bug_detail' bug.id %}" class="btn btn-primary btn-sm">View</a>
+                            {% if user.role == 'admin' or user.role == 'manager' %}
+                            <a href="{% url 'bug_edit' bug.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'bug_delete' bug.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="10"><div class="empty-state"><div class="empty-icon">🐛</div><p>No bugs found. Great work! 🎉</p></div></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+{% block title %}Delete Bug{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Delete Bug</div>
+        <div class="breadcrumb"><span>Dashboard</span> / <span>Bugs</span> / Delete</div>
+    </div>
+</div>
+
+<div class="form-card">
+    <div class="form-title">⚠️ Confirm Delete</div>
+    <p>Are you sure you want to delete Bug <strong>#{{ bug.id }}</strong>?</p>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'bug_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

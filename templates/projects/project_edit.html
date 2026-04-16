@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% block title %}Edit Project{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Edit Project</div>
+        <div class="breadcrumb"><span>Dashboard</span> / <span>Projects</span> / Edit</div>
+    </div>
+</div>
+
+<div class="form-card">
+    <div class="form-title">📁 Edit Project Details</div>
+    <form method="post" action="{% url 'project_edit' project.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="form-label" for="id_name">Project Name <span style="color:#e63946;">*</span></label>
+            <input type="text" id="id_name" name="name" class="form-control" value="{{ form.name.value|default:'' }}" required>
+            {% if form.name.errors %}<div class="form-error">{{ form.name.errors }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_description">Description</label>
+            <textarea id="id_description" name="description" class="form-control" rows="5">{{ form.description.value|default:'' }}</textarea>
+            {% if form.description.errors %}<div class="form-error">{{ form.description.errors }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_manager">Manager <span style="color:#e63946;">*</span></label>
+            <select id="id_manager" name="manager" class="form-control" required>
+                <option value="">-- Select Manager --</option>
+                {% for manager in form.manager.field.queryset %}
+                    <option value="{{ manager.id }}" {% if selected_manager == manager.id|stringformat:"s" %}selected{% endif %}>{{ manager.get_full_name }}</option>
+                {% endfor %}
+            </select>
+            {% if form.manager.errors %}<div class="form-error">{{ form.manager.errors }}</div>{% endif %}
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'project_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unauthorized | Bug Tracking System</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div class="login-page">
+    <div class="login-card" style="max-width:460px; text-align:center;">
+
+        <div class="login-logo">
+            <div class="logo-box">🚫</div>
+            <h2>Access Denied</h2>
+            <p>You are not authorized to view this page</p>
+        </div>
+
+        <div style="background:#fde8e8; border-radius:12px; padding:1.5rem; margin:1.5rem 0;">
+            <p style="color:#c0392b; font-size:0.95rem; margin:0;">
+                Your role <strong>( {{ request.user.role }} )</strong> does not have 
+                permission to access this page.
+            </p>
+        </div>
+
+        <div style="display:flex; gap:1rem; justify-content:center; margin-top:1rem;">
+            <a href="
+                {% if request.user.role == 'admin' %}{% url 'adminDashboard' %}
+                {% elif request.user.role == 'manager' %}{% url 'managerDashboard' %}
+                {% elif request.user.role == 'developer' %}{% url 'developerDashboard' %}
+                {% elif request.user.role == 'tester' %}{% url 'testerDashboard' %}
+                {% endif %}
+            " class="btn btn-primary">
+                🏠 Go to My Dashboard
+            </a>
+            <a href="{% url 'login' %}" class="btn btn-secondary">
+                🔐 Back to Login
+            </a>
+        </div>
+
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 <span>Bug Tracking System</span> &mdash; All rights reserved.
+</footer>
+
+</body>
+</html>

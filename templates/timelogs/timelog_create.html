@@ -1,0 +1,44 @@
+{% extends 'core/base.html' %}
+{% block title %}Log Time{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Log Work Time</div>
+        <div class="breadcrumb"><span>Dashboard</span> / <span>Time Logs</span> / New Entry</div>
+    </div>
+</div>
+
+<div class="form-card">
+    <div class="form-title">⏱ Time Log Entry</div>
+    <form method="post" action="{% url 'timelog_create' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="form-label" for="id_task">Task <span style="color:#e63946;">*</span></label>
+            <select id="id_task" name="task" class="form-control" required>
+                <option value="">-- Select Task --</option>
+                {% for task in tasks %}
+                    <option value="{{ task.id }}" {% if form.task.value == task.id|stringformat:"s" or request.GET.task == task.id|stringformat:"s" %}selected{% endif %}>
+                        {{ task.module.project.name }} / {{ task.module.name }} / {{ task.title }}
+                    </option>
+                {% endfor %}
+            </select>
+            {% if form.task.errors %}<div class="form-error">{{ form.task.errors }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_hours_spent">Hours Spent <span style="color:#e63946;">*</span></label>
+            <input type="number" id="id_hours_spent" name="hours_spent" class="form-control" placeholder="e.g. 3.5" step="0.5" min="0.5" max="24" value="{{ form.hours_spent.value|default:'' }}" required>
+            {% if form.hours_spent.errors %}<div class="form-error">{{ form.hours_spent.errors }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_date">Log Date <span style="color:#e63946;">*</span></label>
+            <input type="date" id="id_date" name="date" class="form-control" value="{{ form.date.value|default:'' }}" required>
+            {% if form.date.errors %}<div class="form-error">{{ form.date.errors }}</div>{% endif %}
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-success">Save Log</button>
+            <a href="{% url 'timelog_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'core/base.html' %}
+{% block title %}Modules{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">All Modules</div>
+        <div class="breadcrumb"><span>Dashboard</span> / Modules</div>
+    </div>
+    <a href="{% url 'module_create' %}" class="btn btn-primary">+ New Module</a>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Module List</div>
+        <div style="font-size:0.85rem; color:#888;">{{ modules|length }} module(s)</div>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead><tr><th>#</th><th>Module Name</th><th>Project</th><th>Tasks</th><th>Actions</th></tr></thead>
+            <tbody>
+                {% for module in modules %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>{{ module.name }}</strong></td>
+                    <td>{{ module.project.name }}</td>
+                    <td>{{ module.tasks.count }}</td>
+                    <td>
+                        <div class="action-btns">
+                            <a href="{% url 'module_edit' module.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'module_delete' module.id %}" class="btn btn-danger btn-sm">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5"><div class="empty-state"><div class="empty-icon">🧩</div><p>No modules found.</p></div></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

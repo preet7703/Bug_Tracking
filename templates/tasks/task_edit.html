@@ -1,0 +1,65 @@
+{% extends 'core/base.html' %}
+{% block title %}Edit Task{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Edit Task</div>
+        <div class="breadcrumb"><span>Dashboard</span> / <span>Tasks</span> / Edit</div>
+    </div>
+</div>
+
+<div class="form-card">
+    <div class="form-title">✅ Edit Task Details</div>
+    <form method="post" action="{% url 'task_edit' task.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="form-label" for="id_title">Task Title <span style="color:#e63946;">*</span></label>
+            <input type="text" id="id_title" name="title" class="form-control" value="{{ form.title.value|default:'' }}" required>
+            {% if form.title.errors %}<div class="form-error">{{ form.title.errors }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_module">Module <span style="color:#e63946;">*</span></label>
+            <select id="id_module" name="module" class="form-control" required>
+                <option value="">-- Select Module --</option>
+                {% for module in modules %}
+                    <option value="{{ module.id }}" {% if selected_module == module.id|stringformat:"s" %}selected{% endif %}>{{ module.project.name }} / {{ module.name }}</option>
+                {% endfor %}
+            </select>
+            {% if form.module.errors %}<div class="form-error">{{ form.module.errors }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_assigned_to">Assign Developer</label>
+            <select id="id_assigned_to" name="assigned_to" class="form-control">
+                <option value="">-- Select Developer --</option>
+                {% for dev in developers %}
+                    <option value="{{ dev.id }}" {% if selected_developer == dev.id|stringformat:"s" %}selected{% endif %}>{{ dev.get_full_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div style="display:flex; gap:1rem;">
+            <div class="form-group" style="flex:1;">
+                <label class="form-label" for="id_start_date">Start Date</label>
+                <input type="date" id="id_start_date" name="start_date" class="form-control" value="{{ form.start_date.value|default:'' }}">
+            </div>
+            <div class="form-group" style="flex:1;">
+                <label class="form-label" for="id_end_date">End Date</label>
+                <input type="date" id="id_end_date" name="end_date" class="form-control" value="{{ form.end_date.value|default:'' }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_status">Status</label>
+            <select id="id_status" name="status" class="form-control">
+                <option value="Pending" {% if form.status.value == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="In Progress" {% if form.status.value == 'In Progress' %}selected{% endif %}>In Progress</option>
+                <option value="Completed" {% if form.status.value == 'Completed' %}selected{% endif %}>Completed</option>
+                <option value="Rejected" {% if form.status.value == 'Rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'task_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

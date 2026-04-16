@@ -1,0 +1,59 @@
+{% extends 'core/base.html' %}
+{% block title %}Tasks{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">All Tasks</div>
+        <div class="breadcrumb"><span>Dashboard</span> / Tasks</div>
+    </div>
+    {% if user.role == 'admin' or user.role == 'manager' %}
+    <a href="{% url 'task_create' %}" class="btn btn-primary">+ New Task</a>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Task List</div>
+        <div style="font-size:0.85rem; color:#888;">{{ tasks|length }} task(s)</div>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>#</th><th>Task Title</th><th>Project</th><th>Module</th><th>Assigned Developer</th><th>Status</th><th>Start Date</th><th>End Date</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+                {% for task in tasks %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>{{ task.title }}</strong></td>
+                    <td>{{ task.module.project.name }}</td>
+                    <td>{{ task.module.name }}</td>
+                    <td>{{ task.assigned_to.get_full_name|default:"Unassigned" }}</td>
+                    <td>
+                        {% if task.status == 'Pending' %}<span class="badge badge-pending">Pending</span>
+                        {% elif task.status == 'In Progress' %}<span class="badge badge-inprogress">In Progress</span>
+                        {% elif task.status == 'Completed' %}<span class="badge badge-completed">Completed</span>
+                        {% elif task.status == 'Rejected' %}<span class="badge badge-rejected">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ task.start_date|date:"d M Y" }}</td>
+                    <td>{{ task.end_date|date:"d M Y" }}</td>
+                    <td>
+                        <div class="action-btns">
+                            <a href="{% url 'task_detail' task.id %}" class="btn btn-primary btn-sm">View</a>
+                            {% if user.role == 'admin' or user.role == 'manager' %}
+                            <a href="{% url 'task_edit' task.id %}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{% url 'task_delete' task.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="9"><div class="empty-state"><div class="empty-icon">✅</div><p>No tasks found.</p></div></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

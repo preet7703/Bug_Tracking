@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup | Bug Tracking System</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<div style="position:fixed; top:1rem; right:1rem;">
+    <a href="{% url 'home' %}" style="color:#fff; font-size:0.85rem; font-weight:600; text-decoration:none; background:rgba(255,255,255,0.15); padding:0.4rem 0.9rem; border-radius:8px; border:1px solid rgba(255,255,255,0.3);">🏠 Home</a>
+</div>
+
+<div class="login-page">
+    <div class="login-card" style="max-width:460px;">
+
+        <div class="login-logo">
+            <div class="logo-box">🐛</div>
+            <h2>Create Account</h2>
+            <p>Join Bug Tracking System</p>
+        </div>
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">
+                {{ form.non_field_errors }}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'signup' %}">
+            {% csrf_token %}
+
+            <!-- First Name -->
+            <div class="form-group">
+                <label class="form-label" for="id_first_name">First Name <span style="color:#e63946;">*</span></label>
+                <input
+                    type="text"
+                    id="id_first_name"
+                    name="first_name"
+                    class="form-control"
+                    placeholder="Enter your first name"
+                    value="{{ form.first_name.value|default:'' }}"
+                    required
+                >
+                {% if form.first_name.errors %}
+                    <div class="form-error">{{ form.first_name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Last Name -->
+            <div class="form-group">
+                <label class="form-label" for="id_last_name">Last Name <span style="color:#e63946;">*</span></label>
+                <input
+                    type="text"
+                    id="id_last_name"
+                    name="last_name"
+                    class="form-control"
+                    placeholder="Enter your last name"
+                    value="{{ form.last_name.value|default:'' }}"
+                    required
+                >
+                {% if form.last_name.errors %}
+                    <div class="form-error">{{ form.last_name.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Gender -->
+            <div class="form-group">
+                <label class="form-label">Gender <span style="color:#e63946;">*</span></label>
+                <div style="display:flex; gap:1.5rem; margin-top:0.4rem;">
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer; color:#444; font-size:0.875rem;">
+                        <input type="radio" name="gender" value="male"
+                            {% if form.gender.value == 'male' %}checked{% endif %}>
+                        Male
+                    </label>
+                    <label style="display:flex; align-items:center; gap:6px; cursor:pointer; color:#444; font-size:0.875rem;">
+                        <input type="radio" name="gender" value="female"
+                            {% if form.gender.value == 'female' %}checked{% endif %}>
+                        Female
+                    </label>
+                </div>
+                {% if form.gender.errors %}
+                    <div class="form-error">{{ form.gender.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Phone Number -->
+            <div class="form-group">
+                <label class="form-label" for="id_phone_number">Phone Number <span style="color:#888; font-weight:400;">(optional)</span></label>
+                <input
+                    type="text"
+                    id="id_phone_number"
+                    name="phone_number"
+                    class="form-control"
+                    placeholder="Enter your phone number"
+                    value="{{ form.phone_number.value|default:'' }}"
+                >
+                {% if form.phone_number.errors %}
+                    <div class="form-error">{{ form.phone_number.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+                <label class="form-label" for="id_email">Email Address <span style="color:#e63946;">*</span></label>
+                <input
+                    type="email"
+                    id="id_email"
+                    name="email"
+                    class="form-control"
+                    placeholder="Enter your email"
+                    value="{{ form.email.value|default:'' }}"
+                    required
+                >
+                {% if form.email.errors %}
+                    <div class="form-error">{{ form.email.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Role -->
+            <div class="form-group">
+                <label class="form-label" for="id_role">Role <span style="color:#e63946;">*</span></label>
+                <select id="id_role" name="role" class="form-control" required>
+                    <option value="">-- Select Your Role --</option>
+                    <option value="admin"     {% if form.role.value == 'admin' %}selected{% endif %}>Admin</option>
+                    <option value="manager"   {% if form.role.value == 'manager' %}selected{% endif %}>Project Manager</option>
+                    <option value="developer" {% if form.role.value == 'developer' %}selected{% endif %}>Developer</option>
+                    <option value="tester"    {% if form.role.value == 'tester' %}selected{% endif %}>Tester</option>
+                </select>
+                {% if form.role.errors %}
+                    <div class="form-error">{{ form.role.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label class="form-label" name="id_password1">Password <span style="color:#e63946;">*</span></label>
+                <input
+                    type="password"
+                    id="id_password1"
+                    name="password1"
+                    class="form-control"
+                    placeholder="Create a strong password"
+                    required
+                >
+                {% if form.password1.errors %}
+                    <div class="form-error">{{ form.password1.errors }}</div>
+                {% endif %}
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="form-group">
+                <label class="form-label" for="id_password2">Confirm Password <span style="color:#e63946;">*</span></label>
+                <input
+                    type="password"
+                    id="id_password2"
+                    name="password2"
+                    class="form-control"
+                    placeholder="Repeat your password"
+                    required
+                >
+                {% if form.password2.errors %}
+                    <div class="form-error">{{ form.password2.errors }}</div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class="btn btn-primary"
+                style="width:100%; justify-content:center; padding:0.75rem; font-size:0.95rem; margin-top:0.5rem;">
+                Create Account
+            </button>
+
+        </form>
+
+        <p style="text-align:center; margin-top:1.5rem; font-size:0.85rem; color:#888;">
+            Already have an account?
+            <a href="{% url 'login' %}" style="color:#4361ee; font-weight:600;">
+                Sign In
+            </a>
+        </p>
+
+    </div>
+</div>
+
+<footer class="footer">
+    &copy; 2026 <span>Bug Tracking System</span> &mdash; All rights reserved.
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+{% extends 'core/base.html' %}
+{% block title %}Bug #{{ bug.id }}{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Bug #{{ bug.id }}</div>
+        <div class="breadcrumb"><span>Dashboard</span> / <span>Bugs</span> / #{{ bug.id }}</div>
+    </div>
+    <div class="action-btns">
+        {% if user.role == 'admin' or user.role == 'manager' %}
+        <a href="{% url 'bug_edit' bug.id %}" class="btn btn-warning">Edit Bug</a>
+        {% endif %}
+        <a href="{% url 'bug_list' %}" class="btn btn-secondary">← Back to Bugs</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Bug Details</div>
+        {% if bug.status == 'Pending' %}<span class="badge badge-pending">Pending</span>
+        {% elif bug.status == 'In Progress' %}<span class="badge badge-inprogress">In Progress</span>
+        {% elif bug.status == 'Completed' %}<span class="badge badge-completed">Completed</span>
+        {% elif bug.status == 'Rejected' %}<span class="badge badge-rejected">Rejected</span>
+        {% endif %}
+    </div>
+    <div class="info-grid">
+        <div class="info-item"><div class="info-label">Bug ID</div><div class="info-value">#{{ bug.id }}</div></div>
+        <div class="info-item"><div class="info-label">Task</div><div class="info-value">{{ bug.task.title }}</div></div>
+        <div class="info-item"><div class="info-label">Project</div><div class="info-value">{{ bug.task.module.project.name }}</div></div>
+        <div class="info-item"><div class="info-label">Module</div><div class="info-value">{{ bug.task.module.name }}</div></div>
+        <div class="info-item"><div class="info-label">Reported By</div><div class="info-value">{{ bug.reported_by.get_full_name }}</div></div>
+        <div class="info-item"><div class="info-label">Assigned To</div><div class="info-value">{{ bug.assigned_to.get_full_name|default:"Unassigned" }}</div></div>
+        <div class="info-item"><div class="info-label">Reported Date</div><div class="info-value">{{ bug.reported_date|date:"d M Y" }}</div></div>
+        <div class="info-item"><div class="info-label">Current Status</div><div class="info-value">{{ bug.status }}</div></div>
+        <div class="info-item" style="grid-column:1/-1;">
+            <div class="info-label">Description</div>
+            <div class="info-value" style="white-space:pre-line; background:#f8f9fa; padding:1rem; border-radius:8px; margin-top:4px;">{{ bug.description }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header"><div class="card-title">Update Bug Status</div></div>
+    <form method="post" action="{% url 'bug_update_status' bug.id %}">
+        {% csrf_token %}
+        <div style="display:flex; gap:1rem; align-items:flex-end; flex-wrap:wrap;">
+            <div class="form-group" style="margin-bottom:0; flex:1; min-width:200px;">
+                <label class="form-label" for="id_status_update">New Status</label>
+                <select id="id_status_update" name="status" class="form-control">
+                    <option value="Pending" {% if bug.status == 'Pending' %}selected{% endif %}>Pending</option>
+                    <option value="In Progress" {% if bug.status == 'In Progress' %}selected{% endif %}>In Progress</option>
+                    <option value="Completed" {% if bug.status == 'Completed' %}selected{% endif %}>Completed</option>
+                    <option value="Rejected" {% if bug.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+                </select>
+            </div>
+            <div><button type="submit" class="btn btn-primary">Update Status</button></div>
+        </div>
+    </form>
+</div>
+{% endblock %}

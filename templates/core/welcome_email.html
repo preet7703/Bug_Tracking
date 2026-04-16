@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin:0; padding:0; background-color:#f0f2f5; font-family:'Segoe UI', sans-serif;">
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f0f2f5; padding:40px 0;">
+        <tr>
+            <td align="center">
+
+                <table width="560" cellpadding="0" cellspacing="0"
+                    style="background:#ffffff; border-radius:16px;
+                           box-shadow:0 4px 24px rgba(0,0,0,0.08); overflow:hidden;">
+
+                    <!-- HEADER -->
+                    <tr>
+                        <td align="center"
+                            style="background:linear-gradient(135deg,#1a1a2e,#16213e);
+                                   padding:36px 40px;">
+                            <h1 style="color:#ffffff; font-size:1.6rem;
+                                       margin:0; font-weight:700;
+                                       letter-spacing:0.5px;">
+                                🐛 Bug Tracking System
+                            </h1>
+                            <p style="color:#adb5bd; margin:8px 0 0; font-size:0.9rem;">
+                                Your account has been created successfully
+                            </p>
+                        </td>
+                    </tr>
+
+                    <!-- BODY -->
+                    <tr>
+                        <td style="padding:36px 40px;">
+
+                            <h2 style="color:#1a1a2e; font-size:1.2rem; margin:0 0 12px;">
+                                Welcome aboard! 👋
+                            </h2>
+
+                            <p style="color:#555; font-size:0.95rem;
+                                      line-height:1.7; margin:0 0 20px;">
+                                Hi <strong>{{ email }}</strong>,<br><br>
+                                Thank you for registering with
+                                <strong style="color:#4361ee;">Bug Tracking System</strong>.
+                                Your account has been created successfully with the
+                                role of <strong style="color:#4361ee;">{{ role }}</strong>.
+                            </p>
+
+                            <!-- INFO BOX -->
+                            <table width="100%" cellpadding="0" cellspacing="0"
+                                style="background:#eef2ff; border-radius:10px;">
+                                <tr>
+                                    <td style="padding:20px 24px;">
+                                        <p style="margin:0 0 8px; color:#555; font-size:0.875rem;">
+                                            <strong>📧 Email:</strong> {{ email }}
+                                        </p>
+                                        <p style="margin:0; color:#555; font-size:0.875rem;">
+                                            <strong>👤 Role:</strong> {{ role }}
+                                        </p>
+                                    </td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                </table>
+
+            </td>
+        </tr>
+    </table>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+{% extends 'core/base.html' %}
+{% block title %}Time Logs{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Time Logs</div>
+        <div class="breadcrumb"><span>Dashboard</span> / Time Logs</div>
+    </div>
+    {% if user.role == 'admin' or user.role == 'developer' %}
+    <a href="{% url 'timelog_create' %}" class="btn btn-success">+ Log Time</a>
+    {% endif %}
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">All Time Logs</div>
+        <div style="font-size:0.85rem; color:#888;">{{ timelogs|length }} log(s)</div>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr><th>#</th><th>Project</th><th>Task</th><th>Developer</th><th>Hours Spent</th><th>Log Date</th>
+                {% if user.role == 'admin' %}
+                <th>Actions</th>
+                {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in timelogs %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ log.task.module.project.name }}</td>
+                    <td>{{ log.task.title }}</td>
+                    <td>{{ log.developer.get_full_name }}</td>
+                    <td><strong style="color:#4361ee;">{{ log.hours_spent }}h</strong></td>
+                    <td>{{ log.date|date:"d M Y" }}</td>
+                    {% if user.role == 'admin' %}
+                    <td>
+                        <a href="{% url 'timelog_delete' log.id %}" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% empty %}
+                <tr><td colspan="7"><div class="empty-state"><div class="empty-icon">⏱</div><p>No time logs found.</p></div></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

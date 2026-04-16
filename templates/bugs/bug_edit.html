@@ -1,0 +1,57 @@
+{% extends 'core/base.html' %}
+{% block title %}Edit Bug{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Edit Bug #{{ bug.id }}</div>
+        <div class="breadcrumb"><span>Dashboard</span> / <span>Bugs</span> / Edit</div>
+    </div>
+</div>
+
+<div class="form-card">
+    <div class="form-title">🐛 Edit Bug Details</div>
+    <form method="post" action="{% url 'bug_edit' bug.id %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label class="form-label" for="id_task">Task <span style="color:#e63946;">*</span></label>
+            <select id="id_task" name="task" class="form-control" required>
+                <option value="">-- Select Task --</option>
+                {% for task in tasks %}
+                    <option value="{{ task.id }}" {% if selected_task == task.id|stringformat:"s" %}selected{% endif %}>
+                        {{ task.module.project.name }} / {{ task.module.name }} / {{ task.title }}
+                    </option>
+                {% endfor %}
+            </select>
+            {% if form.task.errors %}<div class="form-error">{{ form.task.errors }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_description">Bug Description <span style="color:#e63946;">*</span></label>
+            <textarea id="id_description" name="description" class="form-control" rows="6" required>{{ form.description.value|default:'' }}</textarea>
+            {% if form.description.errors %}<div class="form-error">{{ form.description.errors }}</div>{% endif %}
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_assigned_to">Assign Developer</label>
+            <select id="id_assigned_to" name="assigned_to" class="form-control">
+                <option value="">-- Select Developer --</option>
+                {% for dev in developers %}
+                    <option value="{{ dev.id }}" {% if selected_developer == dev.id|stringformat:"s" %}selected{% endif %}>{{ dev.get_full_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="form-label" for="id_status">Status</label>
+            <select id="id_status" name="status" class="form-control">
+                <option value="Pending" {% if form.status.value == 'Pending' %}selected{% endif %}>Pending</option>
+                <option value="In Progress" {% if form.status.value == 'In Progress' %}selected{% endif %}>In Progress</option>
+                <option value="Completed" {% if form.status.value == 'Completed' %}selected{% endif %}>Completed</option>
+                <option value="Rejected" {% if form.status.value == 'Rejected' %}selected{% endif %}>Rejected</option>
+            </select>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+            <a href="{% url 'bug_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

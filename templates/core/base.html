@@ -1,0 +1,238 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Bug Tracking{% endblock %} | Bug Tracking System</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar">
+    {% if user.role == 'admin' %}
+        <a href="{% url 'adminDashboard' %}" class="navbar-brand">
+    {% elif user.role == 'manager' %}
+        <a href="{% url 'managerDashboard' %}" class="navbar-brand">
+    {% elif user.role == 'developer' %}
+        <a href="{% url 'developerDashboard' %}" class="navbar-brand">
+    {% elif user.role == 'tester' %}
+        <a href="{% url 'testerDashboard' %}" class="navbar-brand">
+    {% else %}
+        <a href="{% url 'login' %}" class="navbar-brand">
+    {% endif %}
+        <div class="brand-icon">🐛</div>
+        Bug Tracking System
+    </a>
+
+    {% if user.is_authenticated %}
+    <div class="navbar-nav">
+
+        {% if user.role == 'admin' or user.role == 'manager' %}
+            <a href="{% url 'project_list' %}">Projects</a>
+            {# 🔴 TODO: change # to {% url 'project_list' %} #}
+            <a href="{% url 'task_list' %}">Tasks</a>
+            {# 🔴 TODO: change # to {% url 'task_list' %} #}
+        {% endif %}
+
+        {% if user.role == 'developer' %}
+            <a href="{% url 'task_list' %}">Tasks</a>
+            {# 🔴 TODO: change # to {% url 'task_list' %} #}
+        {% endif %}
+
+        <a href="{% url 'bug_list' %}">Bugs</a>
+        {# 🔴 TODO: change # to {% url 'bug_list' %} #}
+
+    </div>
+    <div class="navbar-user">
+        <span>{{ user.get_full_name }}</span>
+        <div class="avatar">{{ user.first_name|first|upper }}</div>
+        <a href="{% url 'logout' %}" class="btn btn-secondary btn-sm">Logout</a>
+        {#  logout url  #}
+    </div>
+    {% endif %}
+</nav>
+
+<!-- ===== MAIN WRAPPER ===== -->
+<div class="layout-wrapper">
+
+    <!-- SIDEBAR — role based -->
+    {% if user.is_authenticated %}
+    <aside class="sidebar">
+
+        <!-- ===== ADMIN SIDEBAR ===== -->
+        {% if user.role == 'admin' %}
+        <div class="sidebar-section">
+            <div class="sidebar-label">Main Menu</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'adminDashboard' %}">
+                    {#  #}
+                    <span class="nav-icon">🏠</span> Dashboard
+                </a>
+                <a href="{% url 'project_list' %}">
+                    {# 🔴 TODO: change # to {% url 'project_list' %} #}
+                    <span class="nav-icon">📁</span> Projects
+                </a>
+                <a href="{% url 'module_list' %}">
+                    {# 🔴 TODO: change # to {% url 'module_list' %} #}
+                    <span class="nav-icon">🧩</span> Modules
+                </a>
+                <a href="{% url 'task_list' %}">
+                    {# 🔴 TODO: change # to {% url 'task_list' %} #}
+                    <span class="nav-icon">✅</span> Tasks
+                </a>
+            </nav>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Bug Management</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'bug_list' %}">
+                    {# 🔴 TODO: change # to {% url 'bug_list' %} #}
+                    <span class="nav-icon">🐛</span> All Bugs
+                </a>
+            </nav>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Time Tracking</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'timelog_list' %}">
+                    {# 🔴 TODO: change # to {% url 'timelog_list' %} #}
+                    <span class="nav-icon">⏱</span> Time Logs
+                </a>
+            </nav>
+        </div>
+
+        <!-- ===== MANAGER SIDEBAR ===== -->
+        {% elif user.role == 'manager' %}
+        <div class="sidebar-section">
+            <div class="sidebar-label">Main Menu</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'managerDashboard' %}">
+                    {#  DONE #}
+                    <span class="nav-icon">🏠</span> Dashboard
+                </a>
+                <a href="{% url 'project_list' %}">
+                    {# 🔴 TODO: change # to {% url 'project_list' %} #}
+                    <span class="nav-icon">📁</span> Projects
+                </a>
+                <a href="{% url 'module_list' %}">
+                    {# 🔴 TODO: change # to {% url 'module_list' %} #}
+                    <span class="nav-icon">🧩</span> Modules
+                </a>
+                <a href="{% url 'task_list' %}">
+                    {# 🔴 TODO: change # to {% url 'task_list' %} #}
+                    <span class="nav-icon">✅</span> Tasks
+                </a>
+            </nav>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Bug Management</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'bug_list' %}">
+                    {# 🔴 TODO: change # to {% url 'bug_list' %} #}
+                    <span class="nav-icon">🐛</span> All Bugs
+                </a>
+            </nav>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Time Tracking</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'timelog_list' %}">
+                    {# 🔴 TODO: change # to {% url 'timelog_list' %} #}
+                    <span class="nav-icon">⏱</span> Time Logs
+                </a>
+            </nav>
+        </div>
+
+        <!-- ===== DEVELOPER SIDEBAR ===== -->
+        {% elif user.role == 'developer' %}
+        <div class="sidebar-section">
+            <div class="sidebar-label">Main Menu</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'developerDashboard' %}">
+                    {# ✅ DONE #}
+                    <span class="nav-icon">🏠</span> Dashboard
+                </a>
+                <a href="{% url 'task_list' %}">
+                    {# 🔴 TODO: change # to {% url 'task_list' %} #}
+                    <span class="nav-icon">✅</span> Tasks
+                </a>
+            </nav>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Bug Management</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'bug_list' %}">
+                    {# 🔴 TODO: change # to {% url 'bug_list' %} #}
+                    <span class="nav-icon">🐛</span> All Bugs
+                </a>
+            </nav>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-label">Time Tracking</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'timelog_list' %}">
+                    {# 🔴 TODO: change # to {% url 'timelog_list' %} #}
+                    <span class="nav-icon">⏱</span> Time Logs
+                </a>
+                <a href="{% url 'timelog_create' %}">
+                    {# 🔴 TODO: change # to {% url 'timelog_create' %} #}
+                    <span class="nav-icon">🕐</span> Log Time
+                </a>
+            </nav>
+        </div>
+
+        <!-- ===== TESTER SIDEBAR ===== -->
+        {% elif user.role == 'tester' %}
+        <div class="sidebar-section">
+            <div class="sidebar-label">Main Menu</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'testerDashboard' %}">
+                <span class="nav-icon">🏠</span> Dashboard
+                </a>
+                <a href="{% url 'task_list' %}">
+                <span class="nav-icon">✅</span> Tasks
+                </a>
+            </nav>
+        </div>
+        <div class="sidebar-section">
+        <div class="sidebar-label">Bug Management</div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'bug_list' %}">
+                <span class="nav-icon">🐛</span> All Bugs
+                </a>
+                 <a href="{% url 'bug_create' %}">
+                <span class="nav-icon">➕</span> Report Bug
+                </a>
+            </nav>
+        </div>
+
+        {% endif %}
+
+    </aside>
+    {% endif %}
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+
+    </main>
+
+</div>
+<!-- end layout-wrapper -->
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+    &copy; 2026 <span>Bug Tracking System</span> &mdash; All rights reserved.
+</footer>
+
+</body>
+</html>

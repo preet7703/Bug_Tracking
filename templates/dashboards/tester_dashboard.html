@@ -1,0 +1,99 @@
+{% extends 'core/base.html' %}
+{% block title %}Tester Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Tester Dashboard</div>
+        <div class="breadcrumb">Welcome, <span>{{ user.get_full_name }}</span></div>
+    </div>
+    <a href="{% url 'bug_create' %}" class="btn btn-danger">+ Report Bug</a>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-icon">🔍</div>
+        <div class="stat-info">
+            <div class="stat-number">{{ tasks_to_test|default:"0" }}</div>
+            <div class="stat-label">Tasks to Test</div>
+        </div>
+    </div>
+    <div class="stat-card red">
+        <div class="stat-icon">🐛</div>
+        <div class="stat-info">
+            <div class="stat-number">{{ total_bugs|default:"0" }}</div>
+            <div class="stat-label">Bugs Reported</div>
+        </div>
+    </div>
+    <div class="stat-card orange">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-info">
+            <div class="stat-number">{{ pending_bugs|default:"0" }}</div>
+            <div class="stat-label">Pending Bugs</div>
+        </div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon">✔️</div>
+        <div class="stat-info">
+            <div class="stat-number">{{ resolved_bugs|default:"0" }}</div>
+            <div class="stat-label">Resolved Bugs</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Bugs I Reported</div>
+        <a href="{% url 'bug_create' %}" class="btn btn-danger btn-sm">+ New Bug</a>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Bug ID</th>
+                    <th>Project</th>
+                    <th>Task</th>
+                    <th>Description</th>
+                    <th>Assigned To</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bug in reported_bugs %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>#{{ bug.id }}</strong></td>
+                    <td>{{ bug.task.module.project.name }}</td>
+                    <td>{{ bug.task.title }}</td>
+                    <td>{{ bug.description|truncatechars:40 }}</td>
+                    <td>{{ bug.assigned_to.get_full_name|default:"Unassigned" }}</td>
+                    <td>
+                        {% if bug.status == 'Pending' %}<span class="badge badge-pending">Pending</span>
+                        {% elif bug.status == 'In Progress' %}<span class="badge badge-inprogress">In Progress</span>
+                        {% elif bug.status == 'Completed' %}<span class="badge badge-completed">Completed</span>
+                        {% elif bug.status == 'Rejected' %}<span class="badge badge-rejected">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ bug.reported_date|date:"d M Y" }}</td>
+                    <td>
+                        <a href="{% url 'bug_detail' bug.id %}" class="btn btn-primary btn-sm">View</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9">
+                        <div class="empty-state">
+                            <div class="empty-icon">🐛</div>
+                            <p>No bugs reported yet.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'core/base.html' %}
+{% block title %}Delete Time Log{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Delete Time Log</div>
+        <div class="breadcrumb"><span>Dashboard</span> / <span>Time Logs</span> / Delete</div>
+    </div>
+</div>
+
+<div class="form-card">
+    <div class="form-title">⚠️ Confirm Delete</div>
+    <p>Are you sure you want to delete time log for task <strong>{{ timelog.task.title }}</strong>?</p>
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-actions">
+            <button type="submit" class="btn btn-danger">Yes, Delete</button>
+            <a href="{% url 'timelog_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

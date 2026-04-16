@@ -1,0 +1,124 @@
+{% extends 'core/base.html' %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div>
+        <div class="page-title">Admin Dashboard</div>
+        <div class="breadcrumb">Welcome back, <span>{{ user.get_full_name  }}</span></div>
+    </div>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card blue">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+            <div class="stat-number">{{ total_users|default:"0" }}</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+    </div>
+    <div class="stat-card green">
+        <div class="stat-icon">📁</div>
+        <div class="stat-info">
+            <div class="stat-number">{{ total_projects|default:"0" }}</div>
+            <div class="stat-label">Total Projects</div>
+        </div>
+    </div>
+    <div class="stat-card orange">
+        <div class="stat-icon">✅</div>
+        <div class="stat-info">
+            <div class="stat-number">{{ total_tasks|default:"0" }}</div>
+            <div class="stat-label">Total Tasks</div>
+        </div>
+    </div>
+    <div class="stat-card red">
+        <div class="stat-icon">🐛</div>
+        <div class="stat-info">
+            <div class="stat-number">{{ total_bugs|default:"0" }}</div>
+            <div class="stat-label">Total Bugs</div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">Recent Bug Activity</div>
+        <a href="{% url 'bug_list' %}" class="btn btn-primary btn-sm">View All Bugs</a>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>Bug ID</th>
+                    <th>Description</th>
+                    <th>Project</th>
+                    <th>Reported By</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bug in recent_bugs %}
+                <tr>
+                    <td><strong>#{{ bug.id }}</strong></td>
+                    <td>{{ bug.description|truncatechars:40 }}</td>
+                    <td>{{ bug.task.module.project.name }}</td>
+                    <td>{{ bug.reported_by.get_full_name }}</td>
+                    <td>
+                        {% if bug.status == 'Pending' %}<span class="badge badge-pending">Pending</span>
+                        {% elif bug.status == 'In Progress' %}<span class="badge badge-inprogress">In Progress</span>
+                        {% elif bug.status == 'Completed' %}<span class="badge badge-completed">Completed</span>
+                        {% elif bug.status == 'Rejected' %}<span class="badge badge-rejected">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ bug.reported_date|date:"d M Y" }}</td>
+                    <td>
+                        <a href="{% url 'bug_detail' bug.id %}" class="btn btn-primary btn-sm">View</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7"><div class="empty-state"><div class="empty-icon">🐛</div><p>No bugs reported yet.</p></div></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">All Projects</div>
+        <a href="{% url 'project_list' %}" class="btn btn-secondary btn-sm">View All</a>
+    </div>
+    <div class="table-responsive">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Project Name</th>
+                    <th>Manager</th>
+                    <th>Modules</th>
+                    <th>Total Tasks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><strong>{{ project.name }}</strong></td>
+                    <td>{{ project.manager.get_full_name }}</td>
+                    <td>{{ project.modules.count }}</td>
+                    <td>{{ project.total_tasks }}</td>
+                    <td>
+                        <a href="{% url 'project_detail' project.id %}" class="btn btn-primary btn-sm">View</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="6"><div class="empty-state"><div class="empty-icon">📁</div><p>No projects found.</p></div></td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
